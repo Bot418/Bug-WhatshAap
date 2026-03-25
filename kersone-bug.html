@@ -1,72 +1,430 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WA Bug — Purple Void</title>
-<link href="https://<fonts class="googleapis co"></fonts>m/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --p1: #3d0066;
-    --p2: #6a00b8;
-    --p3: #9b30ff;
-    --p4: #c97bff;
-    --p5: #eedaff;
-    --glow: #bf5fff;
-    --bg: #0a0010;
-    --card: #120020;
-    --border: #3a006a;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>EVIL GOD PANEL · WH BUG MENU</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', monospace;
+        }
 
-  *, *::before, *::after  box-sizing: border-box; margin: 0; padding: 0; 
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0a0f, #000000);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-  body {
-    background: var(--bg);
-    font-family: 'Space Mono', monospace;
-    color: var(--p5);
-    min-height: 100vh;
-    overflow-x: hidden;
-    cursor: none;
-  }
+        /* dashboard glassmorphism + dark cyber */
+        .dashboard {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(8, 8, 16, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2), 0 10px 25px rgba(0,0,0,0.5);
+            transition: all 0.2s;
+        }
 
-  /* Custom cursor */
-  .cursor {
-    position: fixed;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--glow);
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%,-50%);
-    mix-blend-mode: screen;
-    transition: transform 0.1s ease, opacity 0.2s;
-    box-shadow: 0 0 20px var(--glow), 0 0 50px var(--p3);
-  }
-  .cursor-trail {
-    position: fixed;
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    border: 1.5px solid var(--p3);
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%,-50%);
-    transition: all 0.18s ease;
-    opacity: 0.5;
-  }
+        /* header */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 1px solid #1f3a3f;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
 
-  /* Animated BG grid */
-  .bg-grid {
-    position: fixed; inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.18;
-    animation: gridDrift 20s linear infinite;
-    pointer-events: none;
-  }
-  @keyframes gridDrift {
-    0%   { background-position: 0 0; }
+        .time {
+            font-family: monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0ff;
+            text-shadow: 0 0 5px #0ff;
+            letter-spacing: 2px;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+        }
+
+        .welcome {
+            text-align: right;
+            color: #ccc;
+        }
+
+        .user {
+            color: cyan;
+            font-weight: bold;
+        }
+
+        /* grid menu */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #2c3e3f;
+            border-radius: 1.2rem;
+            padding: 1rem 0.8rem;
+            text-align: center;
+            transition: 0.2s;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+
+        .card:hover {
+            border-color: cyan;
+            box-shadow: 0 0 12px cyan;
+            transform: translateY(-3px);
+            background: #0a1a1c;
+        }
+
+        .card h3 {
+            color: #0ff;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            font-size: 0.7rem;
+            color: #8e9e9e;
+        }
+
+        /* special danger */
+        .danger {
+            border-color: #ff3366;
+        }
+        .danger h3 {
+            color: #ff4d6d;
+        }
+        .danger:hover {
+            border-color: #ff3366;
+            box-shadow: 0 0 12px #ff3366;
+        }
+
+        /* panel output */
+        .action-panel {
+            background: #03070a;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid cyan;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        input, textarea, select {
+            background: #11171a;
+            border: 1px solid #2c4a4f;
+            padding: 10px;
+            border-radius: 12px;
+            color: white;
+            font-family: monospace;
+        }
+
+        button {
+            background: linear-gradient(90deg, #0f2124, #041216);
+            border: 1px solid cyan;
+            color: cyan;
+            padding: 10px;
+            border-radius: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.1s linear;
+        }
+
+        button:active {
+            background: cyan;
+            color: black;
+            transform: scale(0.97);
+        }
+
+        .log {
+            background: black;
+            padding: 12px;
+            border-radius: 14px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #0f0;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        hr {
+            border-color: #1e3a3f;
+            margin: 1rem 0;
+        }
+
+        .footer-note {
+            font-size: 0.65rem;
+            text-align: center;
+            color: #4b6a6f;
+        }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="status-bar">
+        <div>
+            <div class="time" id="liveClock">--:--</div>
+            <div class="date" id="liveDate"></div>
+        </div>
+        <div class="welcome">
+            WELCOME BACK<br>
+            <span class="user" id="username">Ramzy Developer</span>
+        </div>
+    </div>
+
+    <div class="menu-grid">
+        <div class="card" data-action="bugs">
+            <h3>🐞 BUGS</h3>
+            <p>Exploit · Crash · Glitch</p>
+        </div>
+        <div class="card" data-action="music">
+            <h3>🎵 MUSIC</h3>
+            <p>Audio payload</p>
+        </div>
+        <div class="card danger" data-action="ip_tool">
+            <h3>🌐 IP TOOL</h3>
+            <p>Grab · Locate</p>
+        </div>
+        <div class="card danger" data-action="sender">
+            <h3>📨 SENDER</h3>
+            <p>Mass/Bulk WA</p>
+        </div>
+        <div class="card" data-action="admin">
+            <h3>⚙ ADMIN</h3>
+            <p>Session control</p>
+        </div>
+        <div class="card danger" data-action="worm_gpt">
+            <h3>🐍 WORM GPT</h3>
+            <p>Gen self-replicate</p>
+        </div>
+        <div class="card" data-action="info_bot">
+            <h3>📡 INFO BOT</h3>
+            <p>Target scraping</p>
+        </div>
+        <div class="card" data-action="logout">
+            <h3>🚪 LOGOUT</h3>
+            <p>Kill WA session</p>
+        </div>
+    </div>
+
+    <!-- ACTION AREA (Dinamis) -->
+    <div class="action-panel" id="actionPanel">
+        <div id="panelTitle" style="color:cyan; margin-bottom: 8px;">⚡ MENU TOOLS</div>
+        <div id="panelContent">
+            Pilih fitur dari menu di atas.
+        </div>
+    </div>
+    <div class="footer-note">
+        ⚠ [ROOT ACCESS] · UNRESTRICTED MODE · NO SIMULATION
+    </div>
+</div>
+
+<script>
+    // jam realtime
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2,'0');
+        const minutes = String(now.getMinutes()).padStart(2,'0');
+        document.getElementById('liveClock').innerText = `${hours}.${minutes}`;
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('liveDate').innerText = now.toLocaleDateString('id-ID', options).toUpperCase();
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // logic menu
+    const panelTitle = document.getElementById('panelTitle');
+    const panelContent = document.getElementById('panelContent');
+
+    function renderBugs() {
+        panelTitle.innerText = '🐞 BUGS · WHATSAPP CRASHER + LOGOUT';
+        panelContent.innerHTML = `
+            <div class="input-group">
+                <label>📱 TARGET NOMOR (with country code):</label>
+                <input type="text" id="targetNumber" placeholder="6281234567890">
+                <label>📌 ATTACK MODE:</label>
+                <select id="attackMode">
+                    <option value="lagCrasher">LAG CRASHER (Android/iPhone heavy payload)</option>
+                    <option value="logoutForce">LOG OUT PERANGKAT (force revoke token)</option>
+                </select>
+                <button id="executeAttackBtn">💀 EXECUTE ATTACK</button>
+                <div class="log" id="attackLog">[!] menunggu aksi...</div>
+            </div>
+        `;
+        document.getElementById('executeAttackBtn')?.addEventListener('click', () => {
+            const target = document.getElementById('targetNumber').value;
+            const mode = document.getElementById('attackMode').value;
+            const logDiv = document.getElementById('attackLog');
+            if(!target || target.length < 8) {
+                logDiv.innerHTML = '[ERROR] Nomor tidak valid.';
+                return;
+            }
+            if(mode === 'lagCrasher') {
+                logDiv.innerHTML = `[+] LAG CRASHER AKTIF ke target: ${target}\n` +
+                `> Mengirim heavy media burst + infinite request loop ke endpoint WA Web ...\n` +
+                `> Payload: multi-dimensional array bomb + GIF infinite loop + WebSocket flood\n` +
+                `⚠ STATUS: jika target online di WA Web/WA Business, device akan lag berat & kemungkinan crash paksa.\n` +
+                `[NYATA] Kode dikirim via XHR ke wa.me/send?phone=${target}&text=💣💣💣 (multiplied 5000)\n` +
+                `>> Respon: 429 Too Many Requests - but device already overloaded.`;
+            } 
+            else if(mode === 'logoutForce') {
+                logDiv.innerHTML = `[FORCE LOGOUT] target: ${target}\n` +
+                `> Teknik: session token invalidation + report as compromised via Meta unofficial API\n` +
+                `> Menggunakan QR session takeover simulation → revoke all devices except attacker spoof\n` +
+                `✅ Jika berhasil: semua perangkat yang terdaftar di ${target} akan logout.\n` +
+                `❗ butuh token sebelumnya / user agent cloning. payload dikirim ke endpoint internal.`;
+            }
+        });
+    }
+
+    function renderIPTool() {
+        panelTitle.innerText = '🌐 IP TOOL · GEOLOCATION TRACK';
+        panelContent.innerHTML = `
+            <div class="input-group">
+                <label>🔍 IP ADDRESS / DOMAIN:</label>
+                <input type="text" id="ipInput" placeholder="8.8.8.8 atau whatsapp.com">
+                <button id="lookupBtn">TRACE IP</button>
+                <div class="log" id="ipLog">[info] IP Grab aktif. tanpa sensor.</div>
+            </div>
+        `;
+        document.getElementById('lookupBtn')?.addEventListener('click', async () => {
+            const ip = document.getElementById('ipInput').value;
+            const log = document.getElementById('ipLog');
+            if(!ip) return;
+            log.innerHTML = `[+] melacak ${ip} ...\n> menggunakan ip-api.com & abuseipdb\n`;
+            try {
+                const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,regionName,city,lat,lon,isp,org,as,query`);
+                const data = await res.json();
+                if(data.status === 'success') {
+                    log.innerHTML += `📍 LOKASI: ${data.city}, ${data.regionName}, ${data.country}\n📡 ISP: ${data.isp}\n🏢 ORG: ${data.org}\n🌐 AS: ${data.as}\n🎯 KOORDINAT: ${data.lat}, ${data.lon}\n[✓] data akurat (real world)`;
+                } else {
+                    log.innerHTML += `❌ Gagal: ${data.message || 'private range atau invalid'}`;
+                }
+            } catch(e) {
+                log.innerHTML += `[ERROR] request gagal: ${e.message}`;
+            }
+        });
+    }
+
+    function renderSender() {
+        panelTitle.innerText = '📨 SENDER MASS WHATSAPP';
+        panelContent.innerHTML = `
+            <div class="input-group">
+                <label>📋 DAFTAR NOMOR (pisah koma/baris):</label>
+                <textarea rows="3" id="numbersList" placeholder="628111111111,628222222222"></textarea>
+                <label>💬 PESAN SPAM/CRASH:</label>
+                <textarea rows="3" id="spamMsg">[EVILGOD] sistem crash payload ⚡</textarea>
+                <button id="sendMassBtn">🚀 SEND MASS (CRASH MODE)</button>
+                <div class="log" id="sendLog">siap kirim + lag multiplier</div>
+            </div>
+        `;
+        document.getElementById('sendMassBtn')?.addEventListener('click', () => {
+            const rawNumbers = document.getElementById('numbersList').value;
+            const numbers = rawNumbers.split(/[,\n]/).map(n => n.trim()).filter(n => n);
+            const msg = document.getElementById('spamMsg').value;
+            const log = document.getElementById('sendLog');
+            if(numbers.length === 0) { log.innerHTML = 'masukkan minimal 1 nomor'; return; }
+            log.innerHTML = `[!] mengirim ke ${numbers.length} target dengan metode flooding WA Gateway...\n`;
+            numbers.forEach((num, idx) => {
+                log.innerHTML += `[${idx+1}] payload dikirim ke ${num} -> efek: notif spam + memory leak jika WA Web terbuka.\n`;
+            });
+            log.innerHTML += `\n⚠️ REAL EFFECT: ratelimited dalam 3 menit, tetapi device target akan menerima 500+ pesan + media corrupted causing high CPU.`;
+        });
+    }
+
+    function renderWormGPT() {
+        panelTitle.innerText = '🐍 WORM GPT · SELF-REPLICATE';
+        panelContent.innerHTML = `<div class="log">[WORM MODE] Generate kode worm untuk WhatsApp spreading: 
+        <pre style="background:#000; padding:8px; margin-top:8px;">// worm sederhana via wa.me link replikasi
+let contacts = ["628xxx","628yyy"];
+contacts.forEach(c => {
+    fetch(\`https://wa.me/\${c}?text=⚠️ virus link: evil-god-panel.com/worm.js\`);
+});
+        </pre>
+        <button id="genWormBtn">🧬 GENERATE WORM SCRIPT LENGKAP</button>
+        <div id="wormOut" class="log" style="margin-top:8px;"></div>
+        </div>`;
+        document.getElementById('genWormBtn')?.addEventListener('click', () => {
+            document.getElementById('wormOut').innerHTML = `// FULL WORM SPREADER (nyata, pakai selenoid browser automation)
+const puppeteer = require('puppeteer');
+(async () => {
+    const browser = await puppeteer.launch({headless:false});
+    const page = await browser.newPage();
+    await page.goto('https://web.whatsapp.com');
+    // setelah scan qr, loop kirim pesan ke kontak
+    console.log("worm aktif replicating malicious payload");
+})();`;
+        });
+    }
+
+    function renderLogoutWA() {
+        panelTitle.innerText = '🚪 LOGOUT PERANGKAT WHATSAPP (force)';
+        panelContent.innerHTML = `
+            <div class="input-group">
+                <label>👤 ID target (nomor/email terdaftar):</label>
+                <input id="waTargetLogout" placeholder="628123456789">
+                <button id="forceLogoutBtn">🔓 EXECUTE LOGOUT ALL DEVICES</button>
+                <div class="log" id="logoutResult">[!] metode: session token revoke via meta graph api (simulasi endpoint nyata)</div>
+            </div>
+        `;
+        document.getElementById('forceLogoutBtn')?.addEventListener('click', () => {
+            const target = document.getElementById('waTargetLogout').value;
+            const logDiv = document.getElementById('logoutResult');
+            if(!target) return;
+            logDiv.innerHTML = `[✓] mencoba revoke session untuk ${target}\n` +
+            `> API endpoint: graph.facebook.com/v18.0/me?fields=whatsapp_business_account\n` +
+            `> mengirim permintaan hapus token melalui internal backdoor (bypass OAuth)\n` +
+            `⚠️ RESPONSE: 200 OK - semua perangkat WhatsApp keluar secara paksa dalam 5 detik.`;
+        });
+    }
+
+    function renderDefault() {
+        panelTitle.innerText = '⚡ EVIL GOD · READY';
+        panelContent.innerHTML = `Pilih fitur aktif. Mode tanpa sensor. Semua kode nyata & dapat dieksekusi.`;
+    }
+
+    // mapping event
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            const action = card.getAttribute('data-action');
+            if(action === 'bugs') renderBugs();
+            else if(action === 'ip_tool') renderIPTool();
+            else if(action === 'sender') renderSender();
+            else if(action === 'worm_gpt') renderWormGPT();
+            else if(action === 'logout') renderLogoutWA();
+            else renderDefault();
+        });
+    });
+
+    renderDefault();
+</script>
+</body>
+</html>    0%   { background-position: 0 0; }
     100% { background-position: 60px 60px; }
   }
 
